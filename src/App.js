@@ -1,38 +1,32 @@
 import React, { Component } from 'react';
 import tomato from './tomato.png';
 import './App.css';
+import moment from 'moment'
 
 class PomodoroTimer extends Component {
   constructor() {
     super();
     this.state = {
-      timeElapsed: 0
+      timeRemain: 3
     }
   }
-
   totalTime(timeOne, timeTwo) {
     return timeOne + timeTwo;
   }
 
   componentDidMount() {
     this.interval = setInterval(this.elapseTime.bind(this), 1000);
-    this.setState({
-      start: new Date(),
-    })
-  }
-
-  componentWillUnMount() {
-    clearInterval(this.interval)
   }
 
   elapseTime() {
-    let timeElapsed = Math.floor((new Date() - this.state.start) / 1000);
+    var remain = this.state.timeRemain - 1
     this.setState({
-      timeElapsed: timeElapsed
+      timeRemain: remain,
     })
 
-    if (this.state.timeElapsed >= this.props.workingTime * 60){
-      alert('Time for a break!')
+    if (this.state.timeRemain == 0){
+      clearInterval(this.interval)
+      alert('Break!');
     }
   }
 
@@ -49,7 +43,7 @@ class PomodoroTimer extends Component {
           <p>This timer run for {this.props.workingTime} minutes,
           <br/>followed by rest of {this.props.restingTime} minutes.</p>
           <br/>For a total of {this.totalTime(this.props.workingTime, this.props.restingTime)} minutes.
-          <br/>There are {this.state.timeElapsed} secondes elapsed.
+          <br/>It remains {this.state.timeRemain} before the break.
           <footer>
             <button className="btn btn-primary">Start</button>
           </footer>
