@@ -4,30 +4,32 @@ import './App.css';
 import moment from 'moment'
 
 class PomodoroTimer extends Component {
-  constructor() {
-    super();
-    this.state = {
-      timeRemain: 3
-    }
-  }
-  totalTime(timeOne, timeTwo) {
-    return timeOne + timeTwo;
-  }
+  state = {
+    minute: this.props.workingTime,
+    second: 59
+ }
 
   componentDidMount() {
-    this.interval = setInterval(this.elapseTime.bind(this), 1000);
+    this.interval = setInterval(this.remainTime.bind(this), 1000);
   }
 
-  elapseTime() {
-    var remain = this.state.timeRemain - 1
+  remainTime() {
+    var remainSecond = this.state.second - 1
     this.setState({
-      timeRemain: remain,
+      second: remainSecond,
     })
 
-    if (this.state.timeRemain == 0){
-      clearInterval(this.interval)
-      alert('Break!');
+    if (this.state.second == 0) {
+      var remainMinute = this.state.minute - 1
+      this.setState({
+        minute: remainMinute,
+        second: this.props.second
+      })
     }
+  }
+
+  totalTime(timeOne, timeTwo) {
+    return timeOne + timeTwo;
   }
 
   render() {
@@ -41,9 +43,11 @@ class PomodoroTimer extends Component {
         </div>
         <div className="col-lg-12 wrapper-content">
           <p>This timer run for {this.props.workingTime} minutes,
-          <br/>followed by rest of {this.props.restingTime} minutes.</p>
-          <br/>For a total of {this.totalTime(this.props.workingTime, this.props.restingTime)} minutes.
-          <br/>It remains {this.state.timeRemain} before the break.
+            <br/>followed by rest of {this.props.restingTime} minutes.
+            <br/>For a total of {this.totalTime(this.props.workingTime, this.props.restingTime)} minutes.
+          </p>
+          <br/>It remains <b>{this.state.minute <= 9 ? '0'+this.state.minute : this.state.minute}
+            :{this.state.second <= 9 ? '0'+this.state.second : this.state.second}</b> before the break.
           <footer>
             <button className="btn btn-primary">Start</button>
           </footer>
