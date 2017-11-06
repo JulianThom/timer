@@ -19,12 +19,16 @@ class PomodoroTimer extends Component {
       second: remainSecond,
     })
 
-    if (this.state.second == 0) {
+    if (this.state.second < 0) {
       var remainMinute = this.state.minute - 1
       this.setState({
         minute: remainMinute,
         second: this.props.second
       })
+    }
+
+    if (this.state.minute === 0 && this.state.second === 0){
+      clearInterval(this.interval)
     }
   }
 
