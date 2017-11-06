@@ -6,7 +6,7 @@ import moment from 'moment'
 class PomodoroTimer extends Component {
   state = {
     minute: this.props.workingTime,
-    second: 59
+    second: this.props.second
  }
 
   componentDidMount() {
