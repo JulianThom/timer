@@ -5,15 +5,25 @@ import moment from 'moment'
 
 class PomodoroTimer extends Component {
 
-  startTime = () => this.props.workingTime * 60
+  startWorkingTime = () => this.props.workingTime*60
+  startRestingTime = () => this.props.restingTime*60
 
   state = {
-    time: this.startTime(),
-    disabled: false,
+    workingTime: this.startWorkingTime(),
+    restingTime: this.startRestingTime(),
+    disabled: false
+  }
+
+  reset() {
+    this.setState({
+      workingTime: this.startWorkingTime(),
+      restingTime: this.startRestingTime(),
+      disabled: false
+    });
   }
 
   handleClickStart = () => {
-    this.interval = setInterval(this.remainTime.bind(this), 1000)
+    this.interval = setInterval(this.remainWorkingTime.bind(this), 1000)
     this.setState({
       disabled: true
     })
@@ -21,36 +31,46 @@ class PomodoroTimer extends Component {
 
   handleClickReset = () => {
     clearInterval(this.interval)
-    this.setState({
-      time: this.startTime(),
-      disabled: false,
-    })
+    this.reset()
   }
 
-  remainTime = () => {
-    // si timeBreak- === a
-    let timeRemain = this.state.time - 1
+  remainWorkingTime = () => {
+    let timeRemain = this.state.workingTime - 1
     this.setState({
-      time: timeRemain,
+      workingTime: timeRemain,
     })
-    console.log(this.state.time);
+
+    if (this.state.workingTime === 0) {
+      clearInterval(this.interval)
+      this.interval = setInterval(this.remainRestingTime.bind(this), 1000)
+    }
+  }
+
+  remainRestingTime = () => {
+    let timeRemain = this.state.restingTime - 1
+    this.setState({
+      restingTime: timeRemain,
+    })
+
+    if (this.state.restingTime === 0) {
+      clearInterval(this.interval)
+      this.reset()
+      this.interval = setInterval(this.remainWorkingTime.bind(this), 1000)
+    }
   }
 
   totalTime = (timeOne, timeTwo) => timeOne + timeTwo
 
   render() {
 
-    const formatedTime = moment(this.state.time * 1000).format('mm:ss');
-
+    const formatedWorkingTime = moment(this.state.workingTime * 1000).format('mm:ss');
+    const formatedRestingTime = moment(this.state.restingTime * 1000).format('mm:ss');
     const { disabled } = this.state
-
 
     return (
       <div className="
-        col-xs-4 col-sm-4 col-md-4 col-lg-4
-        col-xs-offset-4 col-sm-offset-4 col-md-offset-4 col-lg-offset-4
-        wrapper-img">
-        <div className="col-lg-12 wrapper-img">
+        col-xs-12 col-sm-12 col-md-4 col-lg-4 col-md-offset-4 col-lg-offset-4 wrapper">
+        <div className="col-lg-12">
           <img src={tomato} alt="tomato" />
         </div>
         <div className="col-lg-12 wrapper-content">
@@ -58,7 +78,8 @@ class PomodoroTimer extends Component {
             <br/>followed by rest of {this.props.restingTime} minutes.
             <br/>For a total of {this.totalTime(this.props.workingTime, this.props.restingTime)} minutes.
           </p>
-          <br/>It remains <b>{formatedTime}</b> before the break.
+          <h1>{formatedWorkingTime}</h1>
+          <h1>{formatedRestingTime}</h1>
           <footer>
             <button
               className={`btn btn-primary ${disabled ? '' : 'active'}` }
