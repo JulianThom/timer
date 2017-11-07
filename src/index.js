@@ -5,5 +5,5 @@ import 'bootstrap/dist/css/bootstrap.css';
 import PomodoroTimer from './App';
 import registerServiceWorker from './registerServiceWorker';
 
-ReactDOM.render(<PomodoroTimer workingTime={24} second={59} restingTime={5} />, document.getElementById('root'));
+ReactDOM.render(<PomodoroTimer workingTime={25} restingTime={5} />, document.getElementById('root'));
 registerServiceWorker();

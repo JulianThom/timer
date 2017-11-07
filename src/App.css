@@ -18,3 +18,7 @@ body {
 footer {
   margin-top: 25px;
 }
+
+footer button {
+  margin-right: 10px;
+}
