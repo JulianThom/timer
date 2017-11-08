@@ -56,6 +56,9 @@ class PomodoroTimer extends Component {
       clearInterval(this.interval)
       this.reset()
       this.interval = setInterval(this.remainWorkingTime.bind(this), 1000)
+      this.setState({
+        disabled: true
+      })
     }
   }
 
